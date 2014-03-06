@@ -58,7 +58,7 @@ def fetch(*args, **kwargs):
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
-    parser = ArgumentParser(description='Fetch public photos from flickr')
+    parser = ArgumentParser(description='Download stock photos from flickr')
     parser.add_argument('tag', nargs='+', help='tags to search for')
     parser.add_argument('-s', '--size', choices=('sq', 't', 's', 'q', 'm', 'n',
                                                  'z', 'c', 'l', 'o'),
