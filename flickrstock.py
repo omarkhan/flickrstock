@@ -22,14 +22,11 @@ def slugify(value):
 
 
 class Downloader(FlickrAPI):
-    def fetch(self, *tags, **kwargs):
+    def fetch(self, tags, size='c', number=10, output=None):
         if not tags:
             raise ValueError('Specify some tags to search for')
-
-        # Default options
-        size = kwargs.setdefault('size', 'c')
-        output = kwargs.setdefault('output', slugify('-'.join(tags)))
-        limit = kwargs.setdefault('limit', 10)
+        if not output:
+            output = slugify('-'.join(tags))
         url_field = 'url_%s' % size.lower()
 
         # Arguments for the flickr api
@@ -46,11 +43,17 @@ class Downloader(FlickrAPI):
         # Make the output dir, fail if it already exists
         os.mkdir(output)
 
-        for photo in islice(photos, 0, limit):
+        for photo in islice(photos, 0, number):
             url = photo.attrib[url_field]
             filename = os.path.basename(url)
             urlretrieve(url, os.path.join(output, filename))
             yield url
+
+
+def fetch(*args, **kwargs):
+    api_key = kwargs.pop('key', None) or os.environ['FLICKR_API_KEY']
+    flickr = Downloader(api_key)
+    return flickr.fetch(*args, **kwargs)
 
 
 if __name__ == '__main__':
@@ -60,13 +63,11 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--size', choices=('sq', 't', 's', 'q', 'm', 'n',
                                                  'z', 'c', 'l', 'o'),
                         default='c', help='photo size')
-    parser.add_argument('-l', '--limit', type=int, default=10, help='how many photos')
-    parser.add_argument('-k', '--key', help='flickr api key')
+    parser.add_argument('-n', '--number', type=int, default=10, help='how many photos')
     parser.add_argument('-o', '--output', help='output directory')
-    args = vars(parser.parse_args())
-    tags = args.pop('tag')
-    api_key = args.get('key') or os.environ['FLICKR_API_KEY']
+    parser.add_argument('-k', '--key', help='flickr api key')
+    options = vars(parser.parse_args())
+    tags = options.pop('tag')
 
-    flickr = Downloader(api_key)
-    for url in flickr.fetch(*tags, **args):
+    for url in fetch(tags, **options):
         print(url)
