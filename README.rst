@@ -22,7 +22,7 @@ Usage
 
 You will need a `flickr API
 key <http://www.flickr.com/services/apps/create/apply>`__. It takes
-about 30 seconds to get one. Set is as the ``FLICKR_API_KEY``
+about 30 seconds to get one. Set it as the ``FLICKR_API_KEY``
 environment variable or pass it on the command line.
 
 ::
