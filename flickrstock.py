@@ -69,5 +69,9 @@ if __name__ == '__main__':
     options = vars(parser.parse_args())
     terms = options.pop('term')
 
-    for url in fetch(terms, **options):
-        print(url)
+    try:
+        for url in fetch(terms, **options):
+            print(url)
+    except Exception as e:
+        print(e)
+        exit(1)
