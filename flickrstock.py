@@ -43,8 +43,11 @@ class Downloader(FlickrAPI):
         # Make the output dir, fail if it already exists
         os.mkdir(output)
 
-        for photo in islice(photos, 0, number):
-            url = photo.attrib[url_field]
+        # Skip photos that don't have the size we want
+        urls = (photo.attrib[url_field] for photo in photos
+                if photo.get(url_field))
+
+        for url in islice(urls, 0, number):
             filename = os.path.basename(url)
             urlretrieve(url, os.path.join(output, filename))
             yield url
