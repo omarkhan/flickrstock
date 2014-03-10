@@ -22,17 +22,17 @@ def slugify(value):
 
 
 class Downloader(FlickrAPI):
-    def fetch(self, tags, size='c', number=10, output=None):
-        if not tags:
-            raise ValueError('Specify some tags to search for')
+    def fetch(self, terms, size='c', number=10, output=None):
+        if not terms:
+            raise ValueError('Specify some search terms')
         if not output:
-            output = slugify('-'.join(tags))
+            output = slugify('-'.join(terms))
         url_field = 'url_%s' % size.lower()
 
         # Arguments for the flickr api
         options = {
-            'tags': ','.join(tags),
-            'tag_mode': 'all',
+            'text': ' '.join(terms),
+            'sort': 'relevance',
             'license': ','.join(map(str, LICENCES)),
             'content_type': '1',  # no screenshots
             'media': 'photos',    # no videos
@@ -59,7 +59,7 @@ def fetch(*args, **kwargs):
 if __name__ == '__main__':
     from argparse import ArgumentParser
     parser = ArgumentParser(description='Download stock photos from flickr')
-    parser.add_argument('tag', nargs='+', help='tags to search for')
+    parser.add_argument('term', nargs='+', help='search terms')
     parser.add_argument('-s', '--size', choices=('sq', 't', 's', 'q', 'm', 'n',
                                                  'z', 'c', 'l', 'o'),
                         default='c', help='photo size')
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--output', help='output directory')
     parser.add_argument('-k', '--key', help='flickr api key')
     options = vars(parser.parse_args())
-    tags = options.pop('tag')
+    terms = options.pop('term')
 
-    for url in fetch(tags, **options):
+    for url in fetch(terms, **options):
         print(url)
