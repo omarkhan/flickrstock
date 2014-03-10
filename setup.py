@@ -5,7 +5,7 @@ with open('README.rst') as readme:
 
 setup(
     name='flickrstock',
-    version='0.2.1',
+    version='0.2.2',
     description='Download stock photos from flickr',
     long_description=long_description,
     author='Omar Khan',
