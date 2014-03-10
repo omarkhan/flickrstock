@@ -29,12 +29,12 @@ environment variable or pass it on the command line.
 
     usage: flickrstock [-h] [-s {sq,t,s,q,m,n,z,c,l,o}] [-n NUMBER] [-o OUTPUT]
                        [-k KEY]
-                       tag [tag ...]
+                       term [term ...]
 
     Download stock photos from flickr
 
     positional arguments:
-      tag                   tags to search for
+      term                  search terms
 
     optional arguments:
       -h, --help            show this help message and exit
